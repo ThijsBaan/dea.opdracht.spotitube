@@ -4,7 +4,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
 @Path("/")
-public class spotitube {
+public class Spotitube {
 
     @GET
     public String helloWorld(){
