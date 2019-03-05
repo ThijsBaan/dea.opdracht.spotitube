@@ -1,4 +1,4 @@
-package nl.thijs.dea.CORS;
+package nl.thijs.dea.cors;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
