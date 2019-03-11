@@ -7,7 +7,7 @@ import javax.ws.rs.Path;
 public class Spotitube {
 
     @GET
-    public String helloWorld(){
+    public String hello(){
         return "Hello World";
     }
 }
