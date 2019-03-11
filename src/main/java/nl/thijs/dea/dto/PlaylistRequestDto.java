@@ -5,7 +5,7 @@ import nl.thijs.dea.dummy.DummyPlaylists;
 import java.util.List;
 
 /**
- * PlaylistRequestDto --- class for making an request for Playlist
+ * PlaylistRequestDto --- class for making an request for PlaylistController
  * @author Thijs
  */
 public class PlaylistRequestDto {

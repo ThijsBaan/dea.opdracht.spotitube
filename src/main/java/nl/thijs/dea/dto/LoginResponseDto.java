@@ -1,7 +1,7 @@
 package nl.thijs.dea.dto;
 
 /**
- * LoginResponseDto --- class for making an response to Login
+ * LoginResponseDto --- class for making an response to LoginController
  * @author Thijs
  */
 public class LoginResponseDto {

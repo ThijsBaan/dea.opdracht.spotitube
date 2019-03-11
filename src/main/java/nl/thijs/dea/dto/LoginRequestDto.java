@@ -1,7 +1,7 @@
 package nl.thijs.dea.dto;
 
 /**
- * LoginRequestDto --- class for making an request for Login
+ * LoginRequestDto --- class for making an request for LoginController
  * @author Thijs
  */
 public class LoginRequestDto {
