@@ -1,4 +1,4 @@
-package nl.thijs.dea;
+package nl.thijs.dea.controllers;
 
 import nl.thijs.dea.dto.LoginRequestDto;
 import nl.thijs.dea.dto.LoginResponseDto;
@@ -13,18 +13,18 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Login --- class for letting user log in to the application
+ * LoginController --- class for letting user log in to the application
  * @author Thijs
  */
 @Path("/")
-public class Login {
+public class LoginController {
     private List<DummyUsers> users = new ArrayList<>();
 
     /**
      * Constructor:
-     * add two DummyUsers for login and add them to the ArrayList users.
+     * add two DummyUsers for LoginController and add them to the ArrayList users.
      */
-    public Login() {
+    public LoginController() {
         users.add(new DummyUsers("thijs", "baan"));
         users.add(new DummyUsers("piet", "jansen"));
     }
@@ -55,8 +55,9 @@ public class Login {
             }
         }
 
+        // 401: Unauthorized. Authorization has failed. This can happen
+        // if the user tried to log in, but supplied an invalid username/password.
         return Response.status(401).build();
-
     }
 
     /**
@@ -65,17 +66,18 @@ public class Login {
      * @return random generated string with specific length
      */
     private String randomTokenGenerator() {
-        final int tokenLength = 15;
-        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-
-        StringBuilder salt = new StringBuilder();
-        Random rnd = new Random();
-
-        while (salt.length() < tokenLength) { // length of the random string.
-            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
-            salt.append(SALTCHARS.charAt(index));
-        }
-
-        return salt.toString();
+//        final int tokenLength = 15;
+//        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+//
+//        StringBuilder salt = new StringBuilder();
+//        Random rnd = new Random();
+//
+//        while (salt.length() < tokenLength) { // length of the random string.
+//            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+//            salt.append(SALTCHARS.charAt(index));
+//        }
+//
+//        return salt.toString();
+        return "ABCDEFG";
     }
 }
