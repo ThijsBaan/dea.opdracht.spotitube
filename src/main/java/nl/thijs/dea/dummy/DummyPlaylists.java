@@ -4,10 +4,10 @@ public class DummyPlaylists {
     private int id;
     private String name;
     private boolean owner;
-    private String tracks;
+    private int[] tracks;
     private int length;
 
-    public DummyPlaylists(int id, String name, boolean owner, String tracks) {
+    public DummyPlaylists(int id, String name, boolean owner, int[] tracks) {
         this.id = id;
         this.name = name;
         this.owner = owner;
@@ -47,11 +47,11 @@ public class DummyPlaylists {
         this.owner = owner;
     }
 
-    public String getTracks() {
+    public int[] getTracks() {
         return tracks;
     }
 
-    public void setTracks(String tracks) {
+    public void setTracks(int[] tracks) {
         this.tracks = tracks;
     }
 }
