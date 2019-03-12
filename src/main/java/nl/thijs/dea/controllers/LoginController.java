@@ -17,6 +17,7 @@ import java.util.Random;
  * @author Thijs
  */
 @Path("/")
+@Produces("application/json")
 public class LoginController {
     private List<DummyUsers> users = new ArrayList<>();
 
@@ -33,12 +34,10 @@ public class LoginController {
      * Let the user login if the user is authorized.
      * @param request an LoginRequestDto object that contains
      *                an Username and Password.
-     * @exception 401: Unauthorized. Authorization has failed.
      * @return response with token and username
      */
     @POST
     @Path("login")
-    @Produces("application/json")
     public Response login(LoginRequestDto request){
 
         for (DummyUsers u : users) {
@@ -55,8 +54,6 @@ public class LoginController {
             }
         }
 
-        // 401: Unauthorized. Authorization has failed. This can happen
-        // if the user tried to log in, but supplied an invalid username/password.
         return Response.status(401).build();
     }
 
@@ -66,13 +63,13 @@ public class LoginController {
      * @return random generated string with specific length
      */
     private String randomTokenGenerator() {
-//        final int tokenLength = 15;
+//        final int TOKENLENGTH = 15;
 //        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 //
 //        StringBuilder salt = new StringBuilder();
 //        Random rnd = new Random();
 //
-//        while (salt.length() < tokenLength) { // length of the random string.
+//        while (salt.length() < TOKENLENGTH) { // length of the random string.
 //            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
 //            salt.append(SALTCHARS.charAt(index));
 //        }
