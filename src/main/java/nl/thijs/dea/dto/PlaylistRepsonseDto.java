@@ -5,10 +5,10 @@ import nl.thijs.dea.dummy.DummyPlaylists;
 import java.util.List;
 
 /**
- * PlaylistRequestDto --- class for making an request for PlaylistController
+ * PlaylistRepsonseDto --- class for making an request for PlaylistController
  * @author Thijs
  */
-public class PlaylistRequestDto {
+public class PlaylistRepsonseDto {
     private List<DummyPlaylists> playlists;
     private int length;
 
