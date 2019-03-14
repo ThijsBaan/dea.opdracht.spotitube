@@ -43,7 +43,7 @@ public class PlaylistController {
     @GET
     @Path("playlists")
     @Produces("application/json")
-    public Response geefPlaylists(@QueryParam("token") String token) {
+    public Response loadPlaylists(@QueryParam("token") String token) {
         if ("ABCDEFG".equals(token)) { //"ABCDEFG" vervangen voor opgeslagen code uit database
             PlaylistRepsonseDto response = new PlaylistRepsonseDto();
 
@@ -70,7 +70,7 @@ public class PlaylistController {
 
     @GET
     @Path("playlists/{forplaylist}/tracks")
-    public Response geefTracks(@PathParam("forplaylist") int forPlayList, @QueryParam("token") String token) {
+    public Response loadTracks(@PathParam("forplaylist") int forPlayList, @QueryParam("token") String token) {
         List<DummyTracks> tempTrackList = new ArrayList<>();
 
         for (DummyPlaylists playlist : musicPlaylist) {
