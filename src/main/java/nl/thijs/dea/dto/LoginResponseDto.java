@@ -24,4 +24,9 @@ public class LoginResponseDto {
     public void setUser(String user) {
         this.user = user;
     }
+
+    public String makeFullname(String firstname, String surname){
+        return firstname.substring(0,1).toUpperCase() + firstname.substring(1).toLowerCase() + " " + firstname.substring(0,1).toUpperCase() + firstname.substring(1).toLowerCase();
+    }
+
 }
