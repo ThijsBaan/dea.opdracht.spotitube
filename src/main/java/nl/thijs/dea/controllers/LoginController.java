@@ -9,6 +9,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -46,27 +47,54 @@ public class LoginController {
     @Path("login")
     public Response login(LoginRequestDto request) throws SQLException {
         var connection = conc.getConnection();
-        PreparedStatement st = connection.prepareStatement("SELECT Username, Password FROM Login WHERE Username = ? " +
-                "AND Password = ?");
-        st.setString(1, request.getUser());
-        st.setString(2, request.getPassword());
 
-        ResultSet resultSet = st.executeQuery();
+        // Pak de results van de login uit de database
+        ResultSet resultLoginSet = doSelectLogin(request, connection);
 
-        if (resultSet.next()) {
+        if (resultLoginSet.next()) {
             LoginResponseDto response = new LoginResponseDto();
 
-            var u = new DummyUsers(request.getUser(), request.getPassword());
-
+            // Genereer een random token
             String token = randomTokenGenerator();
-            String user = u.getFullName();
-
+            // Voeg een token toe aan de database
+            insertTokenWithUser(request.getUser(), connection, token);
             response.setToken(token);
-            response.setUser(user);
+            response.setUser(response.makeFullname(request.getUser(),request.getPassword()));
 
             return Response.ok().entity(response).build();
         }
         return Response.status(401).build();
+    }
+
+    /**
+     * @param request LoginRequestDto object that contains Username and Password
+     * @param connection connection to the database
+     * @return a row executed PreparedStatement for the login with the given params
+     * @throws SQLException if something went wrong, throw Exception
+     */
+    private ResultSet doSelectLogin(LoginRequestDto request, Connection connection) throws SQLException {
+        PreparedStatement loginSt = connection.prepareStatement("SELECT Username, Password FROM Login WHERE Username " +
+                "= ? " +
+                "AND Password = ?");
+        loginSt.setString(1, request.getUser());
+        loginSt.setString(2, request.getPassword());
+
+        return loginSt.executeQuery();
+    }
+
+    /**
+     * @param username String that contains the users Username
+     * @param connection connection to the database
+     * @param token String that contains a random token
+     * @throws SQLException if something went wrong, throw Exception
+     */
+    private void insertTokenWithUser(String username, Connection connection, String token) throws SQLException {
+        PreparedStatement tokenSt = connection.prepareStatement("INSERT INTO Token (Username, Token)" +
+                "VALUES(?, ?)");
+        tokenSt.setString(1, username);
+        tokenSt.setString(2, token);
+
+        tokenSt.executeUpdate();
     }
 
     /**
@@ -76,18 +104,17 @@ public class LoginController {
      * @return random generated string with specific length
      */
     private String randomTokenGenerator() {
-//        final int TOKENLENGTH = 15;
-//        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
-//
-//        StringBuilder salt = new StringBuilder();
-//        Random rnd = new Random();
-//
-//        while (salt.length() < TOKENLENGTH) { // length of the random string.
-//            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
-//            salt.append(SALTCHARS.charAt(index));
-//        }
-//
-//        return salt.toString();
-        return "ABCDEFG";
+        final int TOKENLENGTH = 15;
+        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+
+        StringBuilder salt = new StringBuilder();
+        Random rnd = new Random();
+
+        while (salt.length() < TOKENLENGTH) { // length of the random string.
+            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+            salt.append(SALTCHARS.charAt(index));
+        }
+
+        return salt.toString();
     }
 }
