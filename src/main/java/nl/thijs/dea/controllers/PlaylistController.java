@@ -8,7 +8,6 @@ import nl.thijs.dea.dummy.DummyTracks;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -32,25 +31,30 @@ public class PlaylistController {
         trackList.add(new DummyTracks(4, "So Long, Marianne", "Leonard Cohen", 546, "Songs of Leonard Cohen", false));
         trackList.add(new DummyTracks(5, "One", "Metallica", 423, "", 37, "1-11-2001", "Long version", false));
 
-        int[] tracks1 = {4, 3};
-        int[] tracks2 = {5};
-        int[] tracks3 = {5, 4, 3};
+        int[] tracksVoorPlaylist1 = {4, 3};
+        int[] tracksVoorPlaylist2 = {5};
+        int[] tracksVoorPlaylist3 = {5, 4, 3};
 
-
-        musicPlaylist.add(new DummyPlaylists(1, "Death metal", true, tracks1));
-        musicPlaylist.add(new DummyPlaylists(2, "Pop", false, tracks2));
-        musicPlaylist.add(new DummyPlaylists(3, "Disney", true, tracks3));
+        musicPlaylist.add(new DummyPlaylists(1, "Death metal", true, tracksVoorPlaylist1));
+        musicPlaylist.add(new DummyPlaylists(2, "Pop", false, tracksVoorPlaylist2));
+        musicPlaylist.add(new DummyPlaylists(3, "Disney", true, tracksVoorPlaylist3));
     }
 
     @GET
     @Path("playlists")
     @Produces("application/json")
-    public Response geefResponse(@QueryParam("token") String token) {
+    public Response geefPlaylists(@QueryParam("token") String token) {
         if ("ABCDEFG".equals(token)) { //"ABCDEFG" vervangen voor opgeslagen code uit database
             PlaylistRepsonseDto response = new PlaylistRepsonseDto();
 
-            for (DummyTracks s: trackList) {
-                playlistLength += s.getDuration();
+            for (DummyPlaylists playlist : musicPlaylist) {
+                for (DummyTracks track : trackList) {
+                    for (int i = 0; i < playlist.getTracks().length; i++) {
+                        if (track.getId() == playlist.getTracks()[i]) {
+                            playlistLength += track.getDuration();
+                        }
+                    }
+                }
             }
 
             response.setPlaylists(musicPlaylist);
@@ -69,12 +73,12 @@ public class PlaylistController {
     public Response geefTracks(@PathParam("forplaylist") int forPlayList, @QueryParam("token") String token) {
         List<DummyTracks> tempTrackList = new ArrayList<>();
 
-        for (DummyPlaylists m : musicPlaylist) {
-            if (m.getId() == forPlayList) {
-                for (DummyTracks t : trackList) {
-                    for (int i : m.getTracks()) {
-                        if (i == t.getId()) {
-                            tempTrackList.add(t);
+        for (DummyPlaylists playlist : musicPlaylist) {
+            if (playlist.getId() == forPlayList) {
+                for (DummyTracks track : trackList) {
+                    for (int trackid : playlist.getTracks()) {
+                        if (trackid == track.getId()) {
+                            tempTrackList.add(track);
                         }
                     }
                 }
