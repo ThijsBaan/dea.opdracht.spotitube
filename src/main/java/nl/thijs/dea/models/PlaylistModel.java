@@ -1,13 +1,13 @@
-package nl.thijs.dea.dummy;
+package nl.thijs.dea.models;
 
-public class DummyPlaylists {
+public class PlaylistModel {
     private int id;
     private String name;
     private boolean owner;
     private int[] tracks;
     private int length;
 
-    public DummyPlaylists(int id, String name, boolean owner, int[] tracks) {
+    public PlaylistModel(int id, String name, boolean owner, int[] tracks) {
         this.id = id;
         this.name = name;
         this.owner = owner;

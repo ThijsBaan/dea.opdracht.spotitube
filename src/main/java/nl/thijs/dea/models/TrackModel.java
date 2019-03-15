@@ -1,9 +1,9 @@
-package nl.thijs.dea.dummy;
+package nl.thijs.dea.models;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class DummyTracks {
+public class TrackModel {
     private int id;
     private String title;
     private String performer;
@@ -14,7 +14,7 @@ public class DummyTracks {
     private String description = "";
     private boolean offlineAvailable;
 
-    public DummyTracks(int id, String title, String performer, int duration, String album, boolean offlineAvailable) {
+    public TrackModel(int id, String title, String performer, int duration, String album, boolean offlineAvailable) {
         this.id = id;
         this.title = title;
         this.performer = performer;
@@ -27,7 +27,7 @@ public class DummyTracks {
         this.publicationDate = dtf.format(localDate);
     }
 
-    public DummyTracks(int id, String title, String performer, int duration, String album, int playCount, String publicationDate, String description, boolean offlineAvailable) {
+    public TrackModel(int id, String title, String performer, int duration, String album, int playCount, String publicationDate, String description, boolean offlineAvailable) {
         this.id = id;
         this.title = title;
         this.performer = performer;

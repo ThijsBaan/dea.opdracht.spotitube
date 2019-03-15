@@ -1,11 +1,11 @@
-package nl.thijs.dea.dummy;
+package nl.thijs.dea.models;
 
-public class DummyUsers {
+public class UserModel {
     private String fullName;
     private String username;
     private String password;
 
-    public DummyUsers(String username, String password) {
+    public UserModel(String username, String password) {
         this.username = username;
         this.password = password;
         this.fullName = maakEersteLetterHoofdletter(username) + " " + maakEersteLetterHoofdletter(password);
