@@ -1,4 +1,4 @@
-package nl.thijs.dea.dto;
+package nl.thijs.dea.controllers.dto;
 
 /**
  * LoginResponseDto --- class for making an response to LoginController

@@ -1,6 +1,6 @@
-package nl.thijs.dea.dto;
+package nl.thijs.dea.controllers.dto;
 
-import nl.thijs.dea.dummy.DummyPlaylists;
+import nl.thijs.dea.models.PlaylistModel;
 
 import java.util.List;
 
@@ -9,14 +9,14 @@ import java.util.List;
  * @author Thijs
  */
 public class PlaylistRepsonseDto {
-    private List<DummyPlaylists> playlists;
+    private List<PlaylistModel> playlists;
     private int length;
 
-    public List<DummyPlaylists> getPlaylists() {
+    public List<PlaylistModel> getPlaylists() {
         return playlists;
     }
 
-    public void setPlaylists(List<DummyPlaylists> playlists) {
+    public void setPlaylists(List<PlaylistModel> playlists) {
         this.playlists = playlists;
     }
 
