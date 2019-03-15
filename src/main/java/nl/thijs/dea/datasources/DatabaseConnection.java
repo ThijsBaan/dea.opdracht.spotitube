@@ -1,4 +1,4 @@
-package nl.thijs.dea.connector;
+package nl.thijs.dea.datasources;
 
 import java.sql.*;
 
