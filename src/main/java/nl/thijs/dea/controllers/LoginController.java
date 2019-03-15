@@ -1,20 +1,18 @@
 package nl.thijs.dea.controllers;
 
-import nl.thijs.dea.connector.DatabaseConnection;
-import nl.thijs.dea.dto.LoginRequestDto;
-import nl.thijs.dea.dto.LoginResponseDto;
-import nl.thijs.dea.dummy.DummyUsers;
+import nl.thijs.dea.datasources.doa.LoginDAO;
+import nl.thijs.dea.controllers.dto.LoginRequestDto;
+import nl.thijs.dea.controllers.dto.LoginResponseDto;
+import nl.thijs.dea.models.UserModel;
 
+import javax.inject.Inject;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -25,15 +23,11 @@ import java.util.Random;
 @Path("/")
 @Produces("application/json")
 public class LoginController {
-    private List<DummyUsers> users = new ArrayList<>();
-    private DatabaseConnection conc;
+    private LoginDAO loginDAO;
 
-    /**
-     * Constructor:
-     * Make a new object for the database connection.
-     */
-    public LoginController() {
-        conc = new DatabaseConnection();
+    @Inject
+    public void setLoginDAO(LoginDAO loginDAO){
+        this.loginDAO = loginDAO;
     }
 
     /**
@@ -45,56 +39,24 @@ public class LoginController {
      */
     @POST
     @Path("login")
-    public Response login(LoginRequestDto request) throws SQLException {
-        var connection = conc.getConnection();
-
+    public Response login(LoginRequestDto request) {
         // Pak de results van de login uit de database
-        ResultSet resultLoginSet = doSelectLogin(request, connection);
+        UserModel user = loginDAO.login(request.getUser(), request.getPassword());
 
-        if (resultLoginSet.next()) {
-            LoginResponseDto response = new LoginResponseDto();
+        if ((!user.getUsername().equals("")) || user.getUsername() != null) {
+                LoginResponseDto response = new LoginResponseDto();
 
-            // Genereer een random token
-            String token = randomTokenGenerator();
-            // Voeg een token toe aan de database
-            insertTokenWithUser(request.getUser(), connection, token);
-            response.setToken(token);
-            response.setUser(response.makeFullname(request.getUser(),request.getPassword()));
+                // Genereer een random token
+                String token = randomTokenGenerator();
+                // Voeg een token toe aan de database
+                loginDAO.insertTokenWithUser(user.getUsername(), token);
+                response.setToken(token);
+                response.setUser(response.makeFullname(user.getUsername(),user.getPassword()));
 
-            return Response.ok().entity(response).build();
-        }
+                return Response.ok().entity(response).build();
+            }
+
         return Response.status(401).build();
-    }
-
-    /**
-     * @param request LoginRequestDto object that contains Username and Password
-     * @param connection connection to the database
-     * @return a row executed PreparedStatement for the login with the given params
-     * @throws SQLException if something went wrong, throw Exception
-     */
-    private ResultSet doSelectLogin(LoginRequestDto request, Connection connection) throws SQLException {
-        PreparedStatement loginSt = connection.prepareStatement("SELECT Username, Password FROM Login WHERE Username " +
-                "= ? " +
-                "AND Password = ?");
-        loginSt.setString(1, request.getUser());
-        loginSt.setString(2, request.getPassword());
-
-        return loginSt.executeQuery();
-    }
-
-    /**
-     * @param username String that contains the users Username
-     * @param connection connection to the database
-     * @param token String that contains a random token
-     * @throws SQLException if something went wrong, throw Exception
-     */
-    private void insertTokenWithUser(String username, Connection connection, String token) throws SQLException {
-        PreparedStatement tokenSt = connection.prepareStatement("INSERT INTO Token (Username, Token)" +
-                "VALUES(?, ?)");
-        tokenSt.setString(1, username);
-        tokenSt.setString(2, token);
-
-        tokenSt.executeUpdate();
     }
 
     /**
