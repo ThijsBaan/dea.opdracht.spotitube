@@ -28,7 +28,6 @@ GO
 CREATE TABLE [Token] (
 Username			dt_username		NOT NULL,
 Token				VARCHAR(15)		NOT NULL,
-[Timestamp]			DATETIME		DEFAULT(GETDATE()),
 CONSTRAINT pk_token PRIMARY KEY (Username, Token),
 CONSTRAINT fk_token FOREIGN KEY (Username) REFERENCES [Login] (Username),
 CONSTRAINT ak_token_us UNIQUE(Username),
