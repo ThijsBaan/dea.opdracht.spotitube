@@ -1,6 +1,9 @@
 package nl.thijs.dea.datasources;
 
+import java.io.IOException;
 import java.sql.*;
+import java.util.Objects;
+import java.util.Properties;
 
 public class DatabaseConnection {
     private Connection connection = null;
@@ -15,15 +18,15 @@ public class DatabaseConnection {
 
     private void connect() {
         try {
-            String userID = "sa";
-            String password = "password123";
+            var properties = new Properties();
+            properties.load(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("database.properties")));
+            Class.forName(properties.getProperty("driver"));
 
-            String connectionUrl = "jdbc:sqlserver://localhost;databaseName=dea_spotitube";
-
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            connection = DriverManager.getConnection(connectionUrl, userID, password);
+            connection = DriverManager.getConnection(properties.getProperty("conncectionString"));
         } catch (SQLException | ClassNotFoundException e) {
             System.out.println("An error message has occurred: " + e);
+        } catch (IOException e1) {
+            e1.printStackTrace();
         }
     }
 }

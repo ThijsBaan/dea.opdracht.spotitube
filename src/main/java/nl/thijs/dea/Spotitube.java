@@ -8,7 +8,6 @@ import javax.ws.rs.core.Response;
 @Path("/")
 public class Spotitube {
 
-
     @GET
     @Produces("application/json")
     public Response hello() {
