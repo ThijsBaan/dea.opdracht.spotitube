@@ -40,9 +40,7 @@ public class LoginDAO {
             loginSt.setString(1, user);
             loginSt.setString(2, password);
 
-            ResultSet results = loginSt.executeQuery();
-
-            return results.next();
+            return loginSt.executeQuery().next();
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -87,10 +85,10 @@ public class LoginDAO {
             PreparedStatement userTokenSt = connection.prepareStatement("SELECT Token FROM Token WHERE Username = ?");
             userTokenSt.setString(1, username);
 
-            ResultSet results = userTokenSt.executeQuery();
+            ResultSet r = userTokenSt.executeQuery();
 
-            if (results.next()) {
-                this.token = results.getString("Token");
+            if (r.next()) {
+                this.token = r.getString("Token");
             }
 
             return "".equals(token);

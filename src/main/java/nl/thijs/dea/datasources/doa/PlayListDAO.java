@@ -31,9 +31,7 @@ public class PlayListDAO {
                     "= ? ");
             tokenSt.setString(1, token);
 
-            ResultSet results = tokenSt.executeQuery();
-
-            return results.next();
+            return tokenSt.executeQuery().next();
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
@@ -56,17 +54,17 @@ public class PlayListDAO {
             playlistSt.setString(2, token);
             playlistSt.setString(3, token);
 
-            ResultSet results = playlistSt.executeQuery();
+            ResultSet r = playlistSt.executeQuery();
 
             int[] emptyArray = new int[0];
 
             var playlistList = new ArrayList<PlaylistModel>();
 
-            while (results.next()) {
-                playlistList.add(new PlaylistModel((Integer) results.getObject("ID"), results.getString(
+            while (r.next()) {
+                playlistList.add(new PlaylistModel(r.getInt("ID"), r.getString(
                         "Name"),
-                        results.getBoolean("Owner"), emptyArray));
-                totalPlaylistLength += results.getInt("duration");
+                        r.getBoolean("Owner"), emptyArray));
+                totalPlaylistLength += r.getInt("duration");
             }
 
             return playlistList;
