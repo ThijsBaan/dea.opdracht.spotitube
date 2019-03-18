@@ -26,7 +26,8 @@ public class LoginResponseDto {
     }
 
     public String makeFullname(String firstname, String surname){
-        return firstname.substring(0,1).toUpperCase() + firstname.substring(1).toLowerCase() + " " + firstname.substring(0,1).toUpperCase() + firstname.substring(1).toLowerCase();
+        return firstname.substring(0,1).toUpperCase() + firstname.substring(1).toLowerCase() +
+                " " + surname.substring(0,1).toUpperCase() + surname.substring(1).toLowerCase();
     }
 
 }
