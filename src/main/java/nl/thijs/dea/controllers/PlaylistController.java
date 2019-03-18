@@ -68,27 +68,4 @@ public class PlaylistController {
             return Response.status(403).build();
         }
     }
-
-    @GET
-    @Path("playlists/{forplaylist}/tracks")
-    public Response loadTracks(@PathParam("forplaylist") int forPlayList, @QueryParam("token") String token) {
-        List<TrackModel> tempTrackList = new ArrayList<>();
-
-        for (PlaylistModel playlist : musicPlaylist) {
-            if (playlist.getId() == forPlayList) {
-                for (TrackModel track : trackList) {
-                    for (int trackid : playlist.getTracks()) {
-                        if (trackid == track.getId()) {
-                            tempTrackList.add(track);
-                        }
-                    }
-                }
-
-                var response = new TrackResponseDto();
-                response.setTracks(tempTrackList);
-                return Response.ok().entity(response).build();
-            }
-        }
-        return null;
-    }
 }
