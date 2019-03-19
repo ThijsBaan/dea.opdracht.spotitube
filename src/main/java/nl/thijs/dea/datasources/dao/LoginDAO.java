@@ -1,4 +1,4 @@
-package nl.thijs.dea.datasources.doa;
+package nl.thijs.dea.datasources.dao;
 
 import nl.thijs.dea.datasources.DatabaseConnection;
 import nl.thijs.dea.models.UserModel;
@@ -20,7 +20,7 @@ public class LoginDAO {
     }
 
     public UserModel login(String user, String password) {
-        if (checkIfLoginIsCorrect(user, password)) {
+        if (verifyLogin(user, password)) {
             return new UserModel(user, password);
         }
         return null;
@@ -31,7 +31,7 @@ public class LoginDAO {
      * @param password the password that was used in the loginform.
      * @return a row executed PreparedStatement for the login with the given params
      */
-    private boolean checkIfLoginIsCorrect(String user, String password) {
+    private boolean verifyLogin(String user, String password) {
         try {
             PreparedStatement loginSt = connection.prepareStatement("SELECT Username, Password FROM Login WHERE " +
                     "Username " +
@@ -46,7 +46,6 @@ public class LoginDAO {
             return false;
         }
     }
-
 
     /**
      * Check if hasntUserGotATokenYet(username) returns false,

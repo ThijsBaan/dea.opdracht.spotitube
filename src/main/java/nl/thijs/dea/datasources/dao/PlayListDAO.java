@@ -1,5 +1,6 @@
-package nl.thijs.dea.datasources.doa;
+package nl.thijs.dea.datasources.dao;
 
+import nl.thijs.dea.controllers.dto.PlaylistRequestDto;
 import nl.thijs.dea.datasources.DatabaseConnection;
 import nl.thijs.dea.models.PlaylistModel;
 
@@ -24,7 +25,7 @@ public class PlayListDAO {
         return totalPlaylistLength;
     }
 
-    public boolean isTheClientTokenValid(String token) {
+    public boolean verifyClientToken(String token) {
         try {
             PreparedStatement tokenSt = connection.prepareStatement("SELECT Username, Token FROM Token WHERE " +
                     "Token " +
@@ -38,7 +39,7 @@ public class PlayListDAO {
         }
     }
 
-    public List<PlaylistModel> getAllPlaylists(String token) {
+    public List<PlaylistModel> loadPlaylists(String token) {
         try {
 
             PreparedStatement playlistSt = connection.prepareStatement("SELECT ID, " +
@@ -71,6 +72,47 @@ public class PlayListDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public void addPlaylist(String token, String playlistNaam) {
+        try {
+            PreparedStatement addPlaylistSt = connection.prepareStatement("INSERT INTO Playlist ([Name], [Owner]) " +
+                    "VALUES(?, (SELECT Username FROM Token WHERE Token = ?))");
+            addPlaylistSt.setString(1, playlistNaam);
+            addPlaylistSt.setString(2, token);
+
+            addPlaylistSt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deletePlaylist(String token, int playlistId) {
+        try {
+            PreparedStatement deletePlaylistSt = connection.prepareStatement("DELETE FROM playlist " +
+                    "WHERE id = ? AND [Owner] = (SELECT Username FROM Token WHERE Token = ?)");
+            deletePlaylistSt.setInt(1, playlistId);
+            deletePlaylistSt.setString(2, token);
+
+            deletePlaylistSt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void editPlaylist(String token, int id, String newName) {
+        try {
+            PreparedStatement editPlaylistSt = connection.prepareStatement("UPDATE Playlist " +
+                    "SET [Name] = ? " +
+                    "WHERE id = ? AND [Owner] = (SELECT Username FROM Token WHERE Token = ?)");
+            editPlaylistSt.setString(1, newName);
+            editPlaylistSt.setInt(2, id);
+            editPlaylistSt.setString(3, token);
+
+            editPlaylistSt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }

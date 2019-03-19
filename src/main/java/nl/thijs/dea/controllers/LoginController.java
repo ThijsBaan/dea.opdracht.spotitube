@@ -1,6 +1,6 @@
 package nl.thijs.dea.controllers;
 
-import nl.thijs.dea.datasources.doa.LoginDAO;
+import nl.thijs.dea.datasources.dao.LoginDAO;
 import nl.thijs.dea.controllers.dto.LoginRequestDto;
 import nl.thijs.dea.controllers.dto.LoginResponseDto;
 import nl.thijs.dea.models.UserModel;
@@ -39,16 +39,17 @@ public class LoginController {
         // Pak de results van de login uit de database
         UserModel user = loginDAO.login(request.getUser(), request.getPassword());
 
-        if ((!user.getUsername().equals("")) || user.getUsername() != null) {
-            LoginResponseDto response = new LoginResponseDto();
-
-            loginDAO.insertTokenIfUsersFirstTime(user.getUsername());
-            response.setToken(loginDAO.getToken());
-            response.setUser(response.makeFullname(user.getUsername(), user.getPassword()));
-
-            return Response.ok().entity(response).build();
+        if (("".equals(user.getUsername())) && (user.getUsername() == null)) {
+            return Response.status(401).build();
         }
 
-        return Response.status(401).build();
+        LoginResponseDto response = new LoginResponseDto();
+
+        loginDAO.insertTokenIfUsersFirstTime(user.getUsername());
+        response.setToken(loginDAO.getToken());
+        response.setUser(response.makeFullname(user.getUsername(), user.getPassword()));
+
+        return Response.ok().entity(response).build();
+
     }
 }

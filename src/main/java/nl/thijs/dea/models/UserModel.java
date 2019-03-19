@@ -15,23 +15,11 @@ public class UserModel {
         return name.substring(0,1).toUpperCase() + name.substring(1).toLowerCase();
     }
 
-    public String getFullName() {
-        return fullName;
-    }
-
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getPassword() {
         return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 }

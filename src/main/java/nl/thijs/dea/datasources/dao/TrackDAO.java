@@ -1,4 +1,4 @@
-package nl.thijs.dea.datasources.doa;
+package nl.thijs.dea.datasources.dao;
 
 import nl.thijs.dea.datasources.DatabaseConnection;
 import nl.thijs.dea.models.TrackModel;
@@ -33,18 +33,19 @@ public class TrackDAO {
     }
 
     public List<TrackModel> getAllTracksPerPlaylist(int forPlayList) {
-        try {PreparedStatement track = connection.prepareStatement("SELECT t.ID, Title, Performer, Duration, Album, " +
-                "Playcount, PublicationDate, Description, OfflineAvailable " +
-                "FROM Tracks t WHERE t.ID IN (SELECT Track FROM tracksInPlaylist tp WHERE tp.Playlist = ?)");
+        try {
+            PreparedStatement track = connection.prepareStatement("SELECT t.ID, Title, Performer, Duration, Album, " +
+                    "Playcount, PublicationDate, Description, OfflineAvailable " +
+                    "FROM Tracks t WHERE t.ID IN (SELECT Track FROM tracksInPlaylist tp WHERE tp.Playlist = ?)");
             track.setInt(1, forPlayList);
 
             ResultSet r = track.executeQuery();
             var trackList = new ArrayList<TrackModel>();
 
-            while(r.next()){
+            while (r.next()) {
                 trackList.add(new TrackModel(r.getInt("ID"), r.getString("Title"), r.getString("Performer"),
                         r.getInt("Duration"), r.getString("Album"), r.getInt("Playcount"), r.getString(
-                                "PublicationDate"), r.getString("Description"),  r.getBoolean("OfflineAvailable")));
+                        "PublicationDate"), r.getString("Description"), r.getBoolean("OfflineAvailable")));
             }
 
             return trackList;
