@@ -5,10 +5,10 @@ import nl.thijs.dea.models.PlaylistModel;
 import java.util.List;
 
 /**
- * PlaylistRepsonseDto --- class for making an request for PlaylistController
+ * PlaylistResponseDto --- class for making an request for PlaylistController
  * @author Thijs
  */
-public class PlaylistRepsonseDto {
+public class PlaylistResponseDto {
     private List<PlaylistModel> playlists;
     private int length;
 
