@@ -1,7 +1,5 @@
 package nl.thijs.dea.models;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 public class TrackModel {
     private int id;
@@ -14,17 +12,7 @@ public class TrackModel {
     private String description = "";
     private boolean offlineAvailable;
 
-    public TrackModel(int id, String title, String performer, int duration, String album, boolean offlineAvailable) {
-        this.id = id;
-        this.title = title;
-        this.performer = performer;
-        this.duration = duration;
-        this.album = album;
-        this.offlineAvailable = offlineAvailable;
-
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        LocalDate localDate = LocalDate.now();
-        this.publicationDate = dtf.format(localDate);
+    public TrackModel() {
     }
 
     public TrackModel(int id, String title, String performer, int duration, String album, int playCount, String publicationDate, String description, boolean offlineAvailable) {
@@ -109,5 +97,9 @@ public class TrackModel {
 
     public void setOfflineAvailable(boolean offlineAvailable) {
         this.offlineAvailable = offlineAvailable;
+    }
+
+    public boolean getOfflineAvailable() {
+        return this.offlineAvailable;
     }
 }
