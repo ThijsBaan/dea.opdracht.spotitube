@@ -3,6 +3,7 @@ package nl.thijs.dea.controllers;
 import nl.thijs.dea.controllers.dto.PlaylistResponseDto;
 import nl.thijs.dea.controllers.dto.PlaylistRequestDto;
 import nl.thijs.dea.datasources.dao.PlayListDAO;
+import nl.thijs.dea.datasources.dao.TokenDAO;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -13,20 +14,23 @@ import javax.ws.rs.core.Response;
  *
  * @author Thijs
  */
-@Path("playlists")
+@Path("/")
 @Produces("application/json")
 public class PlaylistController {
     private PlayListDAO playlistDAO;
+    private TokenDAO tokenDAO;
 
     @Inject
-    public void setPlaylistDAO(PlayListDAO playlistDAO) {
+    public void setPlaylistDAO(PlayListDAO playlistDAO, TokenDAO tokenDAO) {
         this.playlistDAO = playlistDAO;
+        this.tokenDAO = tokenDAO;
     }
 
     @GET
+    @Path("playlists")
     @Produces("application/json")
     public Response loadPlaylists(@QueryParam("token") String token) {
-        if (playlistDAO.verifyClientToken(token)) {
+        if (tokenDAO.verifyClientToken(token)) {
             PlaylistResponseDto response = new PlaylistResponseDto();
 
             response.setPlaylists(playlistDAO.loadPlaylists(token));
@@ -41,6 +45,7 @@ public class PlaylistController {
     }
 
     @POST
+    @Path("playlists")
     @Consumes("application/json")
     public Response addPlaylist(@QueryParam("token") String token, PlaylistRequestDto request) {
         playlistDAO.addPlaylist(token, request.getName());
@@ -48,14 +53,14 @@ public class PlaylistController {
     }
 
     @DELETE
-    @Path("/{id}")
+    @Path("playlists/{id}")
     public Response deletePlaylist(@QueryParam("token") String token, @PathParam("id") int id){
         playlistDAO.deletePlaylist(token, id);
         return loadPlaylists(token);
     }
 
     @PUT
-    @Path("/{id}")
+    @Path("playlists/{id}")
     public Response editPlaylist(@QueryParam("token") String token, @PathParam("id") int id,
                                  PlaylistRequestDto request){
         playlistDAO.editPlaylist(token, id, request.getName());

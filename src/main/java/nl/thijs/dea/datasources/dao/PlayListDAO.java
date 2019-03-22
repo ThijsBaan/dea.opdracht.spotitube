@@ -1,6 +1,5 @@
 package nl.thijs.dea.datasources.dao;
 
-import nl.thijs.dea.controllers.dto.PlaylistRequestDto;
 import nl.thijs.dea.datasources.DatabaseConnection;
 import nl.thijs.dea.models.PlaylistModel;
 
@@ -23,20 +22,6 @@ public class PlayListDAO {
 
     public int getTotalPlaylistLength() {
         return totalPlaylistLength;
-    }
-
-    public boolean verifyClientToken(String token) {
-        try {
-            PreparedStatement tokenSt = connection.prepareStatement("SELECT Username, Token FROM Token WHERE " +
-                    "Token " +
-                    "= ? ");
-            tokenSt.setString(1, token);
-
-            return tokenSt.executeQuery().next();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
     }
 
     public List<PlaylistModel> loadPlaylists(String token) {
