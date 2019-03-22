@@ -44,7 +44,6 @@ Album				VARCHAR(255)	NULL,
 Playcount			INT				DEFAULT(0) NOT NULL,
 PublicationDate		DATE			NULL,
 [Description]		VARCHAR(255)	NULL,
-OfflineAvailable	BIT				NOT NULL	
 CONSTRAINT pk_tracks PRIMARY KEY (ID)
 )
 GO
@@ -69,6 +68,7 @@ GO
 CREATE TABLE [tracksInPlaylist](
 Playlist		dt_playlistid	NOT NULL,
 Track			dt_trackid		NOT NULL,
+OfflineAvailable	BIT			NOT NULL
 CONSTRAINT pk_tip PRIMARY KEY (Playlist, Track),
 CONSTRAINT fk_tip_p FOREIGN KEY (Playlist) REFERENCES [Playlist] (ID),
 CONSTRAINT fk_tip_t FOREIGN KEY (Track) REFERENCES [Tracks] (ID)
@@ -80,11 +80,11 @@ VALUES('thijs', 'baan'),
 	  ('piet', 'zwart')
 GO
 
-INSERT INTO [Tracks] ([Title], [Performer], [Duration], [Album], [PublicationDate], [Description], [OfflineAvailable])
-VALUES	('Ocean and a rock', 'Lisa Hannigan', 337, 'Sea sew', NULL, NULL, 0),
-		('So Long, Marianne', 'Leonard Cohen', 546, 'Songs of Leonad Cohen', NULL, NULL, 0)
-INSERT INTO [Tracks] ([Title], [Performer], [Duration], [Album], [Playcount], [PublicationDate], [Description], [OfflineAvailable])
-VALUES	('One', 'Metallica', 423, NULL, 37, '1-11-2001', 'Long Version', 1)
+INSERT INTO [Tracks] ([Title], [Performer], [Duration], [Album], [PublicationDate], [Description])
+VALUES	('Ocean and a rock', 'Lisa Hannigan', 337, 'Sea sew', NULL, NULL),
+		('So Long, Marianne', 'Leonard Cohen', 546, 'Songs of Leonad Cohen', NULL, NULL)
+INSERT INTO [Tracks] ([Title], [Performer], [Duration], [Album], [Playcount], [PublicationDate], [Description])
+VALUES	('One', 'Metallica', 423, NULL, 37, '1-11-2001', 'Long Version')
 GO
 
 INSERT INTO [Playlist] ([Name], [Owner])
@@ -96,10 +96,11 @@ INSERT INTO [followingPlaylist] ([Playlist], [Follower])
 VALUES  (2, 'thijs')
 GO
 
-INSERT INTO [tracksInPlaylist] ([Playlist], [Track])
-VALUES	(1, 1),
-		(1, 2),
-		(2, 1),
-		(2, 2),
-		(2, 3)
+INSERT INTO [tracksInPlaylist] ([Playlist], [Track], [OfflineAvailable])
+VALUES	(1, 1, 1),
+		(1, 2, 0),
+		(2, 1, 0),
+		(2, 2, 1),
+		(2, 3, 0)
 GO
+
