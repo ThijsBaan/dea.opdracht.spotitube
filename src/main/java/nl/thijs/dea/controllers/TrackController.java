@@ -13,7 +13,7 @@ public class TrackController {
     private TrackDAO trackDAO;
 
     @Inject
-    public void setTrackDAO(TrackDAO trackDAO) {
+    public void setDAO(TrackDAO trackDAO) {
         this.trackDAO = trackDAO;
     }
 

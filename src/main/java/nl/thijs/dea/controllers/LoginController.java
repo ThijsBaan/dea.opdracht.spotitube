@@ -24,7 +24,7 @@ public class LoginController {
     private TokenDAO tokenDAO;
 
     @Inject
-    public void setLoginDAO(LoginDAO loginDAO, TokenDAO tokenDAO) {
+    public void setDAO(LoginDAO loginDAO, TokenDAO tokenDAO) {
         this.loginDAO = loginDAO;
         this.tokenDAO = tokenDAO;
     }

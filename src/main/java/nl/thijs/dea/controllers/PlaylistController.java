@@ -21,7 +21,7 @@ public class PlaylistController {
     private TokenDAO tokenDAO;
 
     @Inject
-    public void setPlaylistDAO(PlayListDAO playlistDAO, TokenDAO tokenDAO) {
+    public void setDAO(PlayListDAO playlistDAO, TokenDAO tokenDAO) {
         this.playlistDAO = playlistDAO;
         this.tokenDAO = tokenDAO;
     }
