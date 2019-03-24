@@ -40,7 +40,6 @@ public class TrackController {
     @Path("/playlists/{forplaylist}/tracks/")
     @Consumes("application/json")
     @Produces("application/json")
-    //@Produces("application/json")
     public Response addTrackToPlaylist(@PathParam("forplaylist") int forPlayList,
                                         TrackModel request){
         trackDAO.addTrackToPlaylist(forPlayList, request.getId(), request.getOfflineAvailable());
@@ -57,6 +56,4 @@ public class TrackController {
 
         return Response.ok().entity(response).build();
     }
-
-
 }
