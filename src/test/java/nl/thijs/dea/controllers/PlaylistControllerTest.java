@@ -32,6 +32,7 @@ class PlaylistControllerTest {
 
     private List<PlaylistModel> plm = new ArrayList<>();
     private Response expectedResponse;
+
     @BeforeEach
     void setup(){
         playlistDAOMockup = mock(PlayListDAO.class);
@@ -146,6 +147,6 @@ class PlaylistControllerTest {
         Response r = sut.addPlaylist(TITEL, request);
 
         // Verify
-        //assertEquals(expectedResponse.toString(), r.toString());
+        assertEquals(expectedResponse.toString(), r.toString());
     }
 }

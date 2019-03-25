@@ -29,10 +29,12 @@ public class TokenDAO {
             if (hasntUserGotATokenYet(username)) {
                 var tk = new TokenModel();
 
+                token = tk.randomTokenGenerator();
+
                 PreparedStatement tokenSt = connection.prepareStatement("INSERT INTO Token (Username, Token)" +
                         "VALUES(?, ?)");
                 tokenSt.setString(1, username);
-                tokenSt.setString(2, tk.randomTokenGenerator());
+                tokenSt.setString(2, token);
 
                 tokenSt.executeUpdate();
             }
