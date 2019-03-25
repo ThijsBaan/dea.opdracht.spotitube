@@ -31,9 +31,9 @@ public class LoginDAO {
     private boolean verifyLogin(String user, String password) {
         try {
             PreparedStatement loginSt = connection.prepareStatement("SELECT Username, Password FROM Login " +
-                    "WHERE Username " +
-                    "= ? " +
-                    "AND Password = ?");
+                                                                        "WHERE Username " +
+                                                                        "= ? " +
+                                                                        "AND Password = ?");
             loginSt.setString(1, user);
             loginSt.setString(2, password);
 
