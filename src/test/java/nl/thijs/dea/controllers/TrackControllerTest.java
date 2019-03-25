@@ -1,6 +1,7 @@
 package nl.thijs.dea.controllers;
 
 import nl.thijs.dea.datasources.dao.TrackDAO;
+import nl.thijs.dea.datasources.dao.TrackDAOTest;
 import nl.thijs.dea.models.TrackModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,7 @@ public class TrackControllerTest {
 
     private List<TrackModel> trackList = new ArrayList<>();
 
+    private static final String TOKEN = "123456789";
     private static final int ID = 1;
     private static final String TITLE = "MuziekTitel";
     private static final String PERFORMER = "artiest";
@@ -29,6 +31,9 @@ public class TrackControllerTest {
     private static final String DESCRIPTION = "Looong";
     private static final Boolean OFFLINEAVAILABLE = false;
 
+    private static final int PLAYLIST = 1;
+    private TrackModel track;
+
     @BeforeEach
     void setup() {
         trackDAOMock = mock(TrackDAO.class);
@@ -36,8 +41,9 @@ public class TrackControllerTest {
         sut = new TrackController();
         sut.setDAO(trackDAOMock);
 
-        trackList.add(new TrackModel(ID, TITLE, PERFORMER, DURATION, ALBUM, PLAYCOUNT, PUBLICATIONDATE, DESCRIPTION,
-                OFFLINEAVAILABLE));
+        track = new TrackModel(ID, TITLE, PERFORMER, DURATION, ALBUM, PLAYCOUNT, PUBLICATIONDATE, DESCRIPTION,
+                OFFLINEAVAILABLE);
+        trackList.add(track);
     }
 
     @Test
@@ -51,4 +57,42 @@ public class TrackControllerTest {
         // Verify
         verify(trackDAOMock).getAllTracksWhoAreInPlaylist(ID);
     }
+
+    @Test
+    void checkIfMethodCanDeleteTrackFromPlaylist() {
+        // Setup
+        doNothing().when(trackDAOMock).deleteTrackFromPlaylist(TOKEN, PLAYLIST, ID);
+
+        // Test
+        sut.deleteTrackFromPlaylist(TOKEN, PLAYLIST, ID);
+
+        // Verify
+        verify(trackDAOMock).deleteTrackFromPlaylist(TOKEN, PLAYLIST, ID);
+    }
+
+    @Test
+    void checkIfMethodCanAddTrackFromPlaylist() {
+        // Setup
+        doNothing().when(trackDAOMock).addTrackToPlaylist(PLAYLIST, ID, OFFLINEAVAILABLE);
+
+        // Test
+        sut.addTrackToPlaylist(PLAYLIST, track);
+
+        // Verify
+        verify(trackDAOMock).addTrackToPlaylist(PLAYLIST, ID, OFFLINEAVAILABLE);
+    }
+
+    @Test
+    void checkIfMethodCanloadTracksForAdd() {
+        // Setup
+        when(trackDAOMock.getAllTracksWhoArentInPlaylist(PLAYLIST)).thenReturn(trackList);
+
+        // Test
+        Response result = sut.loadTracksForAdd(TOKEN, PLAYLIST);
+
+        // Verify
+        verify(trackDAOMock).getAllTracksWhoArentInPlaylist(PLAYLIST);
+    }
+
+
 }

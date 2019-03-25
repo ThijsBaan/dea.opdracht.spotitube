@@ -10,11 +10,11 @@
 //    public static final String PASSWORD = "Test123";
 //    LoginController sut;
 //
-//    LoginDAO loginDAOMock;
+//    LoginDAOTest loginDAOMock;
 //
 //    @BeforeEach
 //    void setupTest(){
-//        loginDAOMock = Mockito.mock(LoginDAO.class);
+//        loginDAOMock = Mockito.mock(LoginDAOTest.class);
 //        sut = new LoginController();
 //    }
 //
