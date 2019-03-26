@@ -1,59 +1,123 @@
 package nl.thijs.dea.datasources.dao;
 
 import nl.thijs.dea.datasources.DatabaseConnection;
+import nl.thijs.dea.models.TokenModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 
-import javax.ws.rs.core.Response;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class TokenDAOTest {
-    private DatabaseConnection databaseMock;
-    private Connection connectionMock;
-    private TokenDAO sut;
+class TokenDAOTest {
 
     private static final String USERNAME = "thijs";
     private static final String TOKEN = "123456789";
 
+    private TokenDAO sut;
+    private DatabaseConnection dbConnection;
+    private Connection connection;
+    private PreparedStatement statement;
+    private ResultSet result;
+
+    private TokenModel tokenObj;
 
     @BeforeEach
-    void setup(){
-        databaseMock = mock(DatabaseConnection.class);
-        connectionMock = databaseMock.getConnection();
-
+    void setup() throws SQLException {
         sut = new TokenDAO();
-        sut.setConnection(databaseMock);
+        tokenObj = new TokenModel();
+
+        dbConnection = mock(DatabaseConnection.class);
+
+        connection = Mockito.mock(Connection.class);
+        statement = mock(PreparedStatement.class);
+        result = mock(ResultSet.class);
+
+        when(statement.executeQuery()).thenReturn(result);
+        when(connection.prepareStatement(anyString())).thenReturn(statement);
+        when(dbConnection.getConnection()).thenReturn(connection);
+
+
+        sut.setConnection(dbConnection);
     }
 
     @Test
-    void doesEndpointDelegateCorrectWorkToDAO() {
+    void doesEndpointDelegateCorrectWorkToDbConnection() throws SQLException {
         // Setup
-        when(databaseMock.getConnection()).thenReturn(connectionMock);
 
         // Test
-        sut.setConnection(databaseMock);
-
+        sut.verifyClientToken(USERNAME);
         // Verify
-        verify(databaseMock).getConnection();
+        verify(connection).prepareStatement(anyString());
     }
 
     @Test
-    void checkIfTokenReturnsCorrecBoolean(){
-        // setup
+    void doesMethodVerifyClientTokenSetString() throws SQLException {
+        //Setup
 
-        // test
-        boolean verifier = sut.verifyClientToken(TOKEN);
+        //Test
+        sut.verifyClientToken(USERNAME);
 
-        // verify
-        assertTrue(verifier);
+        //Verify
+        verify(statement).setString(1, USERNAME);
+    }
+
+    @Test
+    void doesMethodVerifyClientExecuteQuery() throws SQLException {
+        //Setup
+
+        //Test
+        sut.verifyClientToken(USERNAME);
+
+        //Verify
+        verify(statement).executeQuery();
+    }
+
+
+    @Test
+    void doesMethodVerifyClientTokenHandleSQLExceptionCorrect() throws SQLException {
+        //Setup
+        when(connection.prepareStatement(anyString())).thenThrow(new SQLException());
+
+        assertThrows(SQLException.class, () -> {
+            sut.verifyClientToken(USERNAME);
+        });
+    }
+
+    @Test
+    void doesMethodInsertTokenIfUsersFirstTimeSetString() throws SQLException {
+        //Setup
+
+        //Test
+        sut.insertTokenIfUsersFirstTime(USERNAME);
+
+        //Verify
+        verify(statement).setString(1, USERNAME);
+
+    }
+
+    @Test
+    void doesMethodInsertTokenIfUsersFirstTimeExecuteQuery() throws SQLException {
+        //Setup
+
+        //Test
+        sut.insertTokenIfUsersFirstTime(USERNAME);
+
+        //Verify
+        verify(statement).executeQuery();
+    }
+
+    @Test
+    void doesMethodHasntUserGotATokenYetSetToken() throws SQLException {
+        //Setup
+        when(result.next()).thenReturn(true);
+
+        //Test
+        sut.insertTokenIfUsersFirstTime(USERNAME);
+
+        //Verify
+        assertNotNull(sut.getToken());
     }
 }

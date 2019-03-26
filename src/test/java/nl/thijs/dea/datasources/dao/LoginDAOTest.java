@@ -11,8 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 
@@ -49,7 +48,7 @@ class LoginDAOTest {
     }
 
     @Test
-    void doesEndpointDelegateCorrectWorkToDAO() throws SQLException {
+    void doesEndpointDelegateCorrectWorkToDbConnection() throws SQLException {
         // Setup
 
         // Test
@@ -106,4 +105,10 @@ class LoginDAOTest {
         assertNull(realUser);
     }
 
+    @Test
+    void doSQLExceptionGetsCorrectHandling(){
+        // MOET NOG GEMAAKT WORDEN!!!
+
+        fail();
+    }
 }
