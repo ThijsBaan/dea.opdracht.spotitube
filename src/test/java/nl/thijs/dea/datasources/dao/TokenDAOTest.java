@@ -1,7 +1,7 @@
 package nl.thijs.dea.datasources.dao;
 
 import nl.thijs.dea.datasources.DatabaseConnection;
-import nl.thijs.dea.models.TokenModel;
+import nl.thijs.dea.services.models.TokenModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -23,12 +23,12 @@ class TokenDAOTest {
     private ResultSet result;
 
     private TokenModel tokenObj;
+    private SQLException sqlException;
 
     @BeforeEach
     void setup() throws SQLException {
-        sut = new TokenDAO();
         tokenObj = new TokenModel();
-
+        sqlException = mock(SQLException.class);
         dbConnection = mock(DatabaseConnection.class);
 
         connection = Mockito.mock(Connection.class);
@@ -39,8 +39,7 @@ class TokenDAOTest {
         when(connection.prepareStatement(anyString())).thenReturn(statement);
         when(dbConnection.getConnection()).thenReturn(connection);
 
-
-        sut.setConnection(dbConnection);
+        sut = new TokenDAO(dbConnection);
     }
 
     @Test
@@ -75,29 +74,6 @@ class TokenDAOTest {
         verify(statement).executeQuery();
     }
 
-
-    @Test
-    void doesMethodVerifyClientTokenHandleSQLExceptionCorrect() throws SQLException {
-        //Setup
-        when(connection.prepareStatement(anyString())).thenThrow(new SQLException());
-
-        assertThrows(SQLException.class, () -> {
-            sut.verifyClientToken(USERNAME);
-        });
-    }
-
-    @Test
-    void doesMethodInsertTokenIfUsersFirstTimeSetString() throws SQLException {
-        //Setup
-
-        //Test
-        sut.insertTokenIfUsersFirstTime(USERNAME);
-
-        //Verify
-        verify(statement).setString(1, USERNAME);
-
-    }
-
     @Test
     void doesMethodInsertTokenIfUsersFirstTimeExecuteQuery() throws SQLException {
         //Setup
@@ -119,5 +95,40 @@ class TokenDAOTest {
 
         //Verify
         assertNotNull(sut.getToken());
+    }
+
+    @Test
+    void doesMethodHasntUserGotATokenYetHandleSQLExceptionCorrect() throws SQLException {
+        //Setup
+        when(connection.prepareStatement(anyString())).thenThrow(sqlException);
+
+        sut.insertTokenIfUsersFirstTime(USERNAME);
+
+        verify(sqlException).printStackTrace();
+    }
+
+
+    @Test
+    void doesMethodInsertTokenIfUsersFirstTimeHandleSQLExceptionCorrect() throws SQLException {
+        //Setup
+        when(result.next()).thenReturn(true);
+        when(result.getString("Token")).thenReturn(TOKEN);
+        when(statement.executeUpdate()).thenThrow(sqlException);
+
+        sut.insertTokenIfUsersFirstTime(USERNAME);
+
+        verify(sqlException).printStackTrace();
+    }
+
+    @Test
+    void doesMethodVerifyClientTokenHandleSQLExceptionCorrect() throws SQLException {
+        //Setup
+        when(connection.prepareStatement(anyString())).thenThrow(sqlException);
+
+        //Test
+        sut.verifyClientToken(USERNAME);
+
+        //Verify
+        verify(sqlException).printStackTrace();
     }
 }

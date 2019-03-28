@@ -1,23 +1,20 @@
-package nl.thijs.dea.controllers;
+package nl.thijs.dea.services;
 
 import nl.thijs.dea.datasources.dao.TrackDAO;
-import nl.thijs.dea.services.TrackService;
 import nl.thijs.dea.services.dto.TrackResponseDto;
 import nl.thijs.dea.services.models.TrackModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import javax.ws.rs.core.Response;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
 
-class TrackControllerTest {
+class TrackServiceTest {
 
-    private TrackService trackServiceMock;
-    private TrackController sut;
+    private TrackDAO trackDAOMock;
+    private TrackService sut;
 
     private List<TrackModel> trackList = new ArrayList<>();
 
@@ -34,71 +31,64 @@ class TrackControllerTest {
 
     private static final int PLAYLIST = 1;
     private TrackModel track;
-    private TrackResponseDto response;
 
     @BeforeEach
     void setup() {
-        trackServiceMock = mock(TrackService.class);
+        trackDAOMock = mock(TrackDAO.class);
 
-        sut = new TrackController();
-        sut.setService(trackServiceMock);
+        sut = new TrackService();
+        sut.setDAO(trackDAOMock);
 
         track = new TrackModel(ID, TITLE, PERFORMER, DURATION, ALBUM, PLAYCOUNT, PUBLICATIONDATE, DESCRIPTION,
                 OFFLINEAVAILABLE);
         trackList.add(track);
-        response = new TrackResponseDto();
-        response.setTracks(trackList);
-
     }
 
     @Test
     void doesEndpointDelegateCorrectWorkToDAO() {
         // Setup
-        when(trackServiceMock.loadTracksPerPlaylist(ID)).thenReturn(response);
+        when(trackDAOMock.getAllTracksWhoAreInPlaylist(ID)).thenReturn(trackList);
 
         // Test
-        Response result = sut.loadTracksPerPlaylist(ID);
+        TrackResponseDto result = sut.loadTracksPerPlaylist(ID);
 
         // Verify
-        verify(trackServiceMock).loadTracksPerPlaylist(ID);
+        verify(trackDAOMock).getAllTracksWhoAreInPlaylist(ID);
     }
-
 
     @Test
     void checkIfMethodCanDeleteTrackFromPlaylist() {
         // Setup
-        doNothing().when(trackServiceMock).deleteTrackFromPlaylist(TOKEN, PLAYLIST, ID);
+        doNothing().when(trackDAOMock).deleteTrackFromPlaylist(TOKEN, PLAYLIST, ID);
 
         // Test
         sut.deleteTrackFromPlaylist(TOKEN, PLAYLIST, ID);
 
         // Verify
-        verify(trackServiceMock).deleteTrackFromPlaylist(TOKEN, PLAYLIST, ID);
+        verify(trackDAOMock).deleteTrackFromPlaylist(TOKEN, PLAYLIST, ID);
     }
 
     @Test
     void checkIfMethodCanAddTrackFromPlaylist() {
         // Setup
-        doNothing().when(trackServiceMock).addTrackToPlaylist(PLAYLIST, track);
+        doNothing().when(trackDAOMock).addTrackToPlaylist(PLAYLIST, ID, OFFLINEAVAILABLE);
 
         // Test
         sut.addTrackToPlaylist(PLAYLIST, track);
 
         // Verify
-        verify(trackServiceMock).addTrackToPlaylist(PLAYLIST, track);
+        verify(trackDAOMock).addTrackToPlaylist(PLAYLIST, ID, OFFLINEAVAILABLE);
     }
 
     @Test
     void checkIfMethodCanloadTracksForAdd() {
         // Setup
-        when(trackServiceMock.loadTracksForAdd(TOKEN, PLAYLIST)).thenReturn(response);
+        when(trackDAOMock.getAllTracksWhoArentInPlaylist(PLAYLIST)).thenReturn(trackList);
 
         // Test
-        Response result = sut.loadTracksForAdd(TOKEN, PLAYLIST);
+        TrackResponseDto result = sut.loadTracksForAdd(TOKEN, PLAYLIST);
 
         // Verify
-        verify(trackServiceMock).loadTracksForAdd(TOKEN, PLAYLIST);
+        verify(trackDAOMock).getAllTracksWhoArentInPlaylist(PLAYLIST);
     }
-
-
 }

@@ -1,57 +1,59 @@
 package nl.thijs.dea.controllers;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
-import nl.thijs.dea.controllers.dto.LoginRequestDto;
-import nl.thijs.dea.datasources.dao.LoginDAO;
-import nl.thijs.dea.datasources.dao.TokenDAO;
-import nl.thijs.dea.models.UserModel;
+import nl.thijs.dea.services.LoginService;
+import nl.thijs.dea.services.dto.LoginRequestDto;
+import nl.thijs.dea.services.dto.LoginResponseDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.ws.rs.core.Response;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
+
 class LoginControllerTest {
     private static final String USERNAME = "Test";
     private static final String PASSWORD = "Test123";
+    private static final String TOKEN = "123456789";
 
     private LoginController sut;
-    private LoginDAO loginDAOMock;
-    private TokenDAO tokenDAOMock;
     private LoginRequestDto request;
-    private UserModel user;
+    private LoginService loginServiceMock;
+    private LoginResponseDto userResponse;
 
     @BeforeEach
     void setup() {
-        loginDAOMock = mock(LoginDAO.class);
-        tokenDAOMock = mock(TokenDAO.class);
         sut = new LoginController();
-        sut.setDAO(loginDAOMock, tokenDAOMock);
+        loginServiceMock = mock(LoginService.class);
+        sut.setService(loginServiceMock);
 
         request = new LoginRequestDto();
         request.setUser(USERNAME);
         request.setPassword(PASSWORD);
 
-        user = new UserModel(USERNAME, PASSWORD);
+        userResponse = new LoginResponseDto();
+        userResponse.setToken(TOKEN);
+        userResponse.setUser(USERNAME);
     }
 
     @Test
     void doesEndpointDelegateCorrectWorkToDAO() {
         // Setup
-        when(loginDAOMock.login(USERNAME, PASSWORD)).thenReturn(user);
+        when(loginServiceMock.login(request)).thenReturn(userResponse);
 
         // Test
         Response result = sut.login(request);
 
         // Verify
-        verify(loginDAOMock).login(USERNAME, PASSWORD);
+        verify(loginServiceMock).login(request);
     }
 
     @Test
     void checkIfRespondLevelIs200() {
         // Setup
-        when(loginDAOMock.login(USERNAME, PASSWORD)).thenReturn(user);
+        when(loginServiceMock.login(request)).thenReturn(userResponse);
 
         // Test
         Response result = sut.login(request);
@@ -64,7 +66,7 @@ class LoginControllerTest {
     @Test
     void checkIfLoginWentWrongAndResponseStatus401IsGiven() {
         // Setup
-        when(loginDAOMock.login(USERNAME, PASSWORD)).thenReturn(null);
+        when(loginServiceMock.login(request)).thenReturn(null);
 
         // Test
         Response result = sut.login(request);

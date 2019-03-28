@@ -1,7 +1,7 @@
 package nl.thijs.dea.datasources.dao;
 
 import nl.thijs.dea.datasources.DatabaseConnection;
-import nl.thijs.dea.models.PlaylistModel;
+import nl.thijs.dea.services.models.PlaylistModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -12,34 +12,26 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
 class PlaylistDAOTest {
-
-    private static final String USERNAME = "thijs";
     private static final String TOKEN = "123456789";
 
     private static final int ID = 1;
     private static final String NAAM = "Disney";
-    private static final Boolean OWNER = false;
-    private static final int[] TRACKS = {1,2};
 
     private PlayListDAO sut;
-    private DatabaseConnection dbConnection;
     private Connection connection;
     private PreparedStatement statement;
     private ResultSet result;
 
-    private PlaylistModel playlistObj;
+    private SQLException sqlException;
 
     @BeforeEach
     void setup() throws SQLException {
-        sut = new PlayListDAO();
-        playlistObj = new PlaylistModel(ID, NAAM, OWNER, TRACKS);
-
-        dbConnection = mock(DatabaseConnection.class);
+        sqlException = mock(SQLException.class);
+        DatabaseConnection dbConnection = mock(DatabaseConnection.class);
 
         connection = Mockito.mock(Connection.class);
         statement = mock(PreparedStatement.class);
@@ -49,8 +41,7 @@ class PlaylistDAOTest {
         when(connection.prepareStatement(anyString())).thenReturn(statement);
         when(dbConnection.getConnection()).thenReturn(connection);
 
-
-        sut.setConnection(dbConnection);
+        sut = new PlayListDAO(dbConnection);
     }
 
     @Test
@@ -189,22 +180,46 @@ class PlaylistDAOTest {
 
     @Test
     void doesMethodLoadPlaylistTokenHandleSQLExceptionCorrect() throws SQLException {
-        fail();
-    }
+        //Setup
+        when(connection.prepareStatement(anyString())).thenThrow(sqlException);
+
+        //Test
+        sut.loadPlaylists(TOKEN);
+
+        //Verify
+        verify(sqlException).printStackTrace();    }
 
     @Test
     void doesMethodAddPlaylistTokenHandleSQLExceptionCorrect() throws SQLException {
-        fail();
-    }
+        //Setup
+        when(connection.prepareStatement(anyString())).thenThrow(sqlException);
+
+        //Test
+        sut.addPlaylist(TOKEN, NAAM);
+
+        //Verify
+        verify(sqlException).printStackTrace();    }
 
     @Test
     void doesMethodDeletePlaylistTokenHandleSQLExceptionCorrect() throws SQLException {
-        fail();
-    }
+        //Setup
+        when(connection.prepareStatement(anyString())).thenThrow(sqlException);
+
+        //Test
+        sut.deletePlaylist(TOKEN, ID);
+
+        //Verify
+        verify(sqlException).printStackTrace();    }
 
     @Test
     void doesMethodEditPlaylistTokenHandleSQLExceptionCorrect() throws SQLException {
-        fail();
-    }
+        //Setup
+        when(connection.prepareStatement(anyString())).thenThrow(sqlException);
+
+        //Test
+        sut.editPlaylist(TOKEN, ID, NAAM);
+
+        //Verify
+        verify(sqlException).printStackTrace();    }
 
 }

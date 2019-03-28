@@ -1,6 +1,5 @@
-package nl.thijs.dea.controllers;
+package nl.thijs.dea.services;
 
-import nl.thijs.dea.services.PlaylistService;
 import nl.thijs.dea.services.dto.PlaylistRequestDto;
 import nl.thijs.dea.services.dto.PlaylistResponseDto;
 import nl.thijs.dea.datasources.dao.PlayListDAO;
@@ -17,10 +16,12 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class PlaylistControllerTest {
+class PlaylistServiceTest {
+
+
     private PlayListDAO playlistDAOMockup;
     private TokenDAO tokenDAOMockup;
-    private PlaylistController sut;
+    private PlaylistService sut;
     private PlaylistModel playlist;
     private PlaylistRequestDto request;
 
@@ -31,15 +32,13 @@ class PlaylistControllerTest {
     private static final int[] TRACKS = new int[0];
 
     private List<PlaylistModel> plm = new ArrayList<>();
-    private Response expectedResponse;
-    private PlaylistService playlistServiceMock;
     private PlaylistResponseDto response;
-
     @BeforeEach
     void setup() {
-        sut = new PlaylistController();
-        playlistServiceMock = mock(PlaylistService.class);
-        sut.setService(playlistServiceMock);
+        playlistDAOMockup = mock(PlayListDAO.class);
+        tokenDAOMockup = mock(TokenDAO.class);
+        sut = new PlaylistService();
+        sut.setDAO(playlistDAOMockup, tokenDAOMockup);
 
         playlist = new PlaylistModel(ID, TITEL, OWNER, TRACKS);
         plm.add(playlist);
@@ -47,83 +46,92 @@ class PlaylistControllerTest {
         request.setName(TITEL);
 
         response = new PlaylistResponseDto();
-        response.setPlaylists(plm);
-        response.setLength(5);
-
-        expectedResponse = Response.ok().entity(response).build();
-
+        response.setPlaylists(playlistDAOMockup.loadPlaylists(TOKEN));
+        response.setLength(playlistDAOMockup.getTotalPlaylistLength());
     }
 
 
     @Test
     void doesEndpointDelegateCorrectWorkToDAO() {
         // Setup
-        when(playlistServiceMock.loadPlaylists(TOKEN)).thenReturn(response);
+        when(tokenDAOMockup.verifyClientToken(TOKEN)).thenReturn(true);
 
         // Test
-        Response result = sut.loadPlaylists(TOKEN);
+        PlaylistResponseDto result = sut.loadPlaylists(TOKEN);
 
         // Verify
-        verify(playlistServiceMock).loadPlaylists(TOKEN);
+        verify(tokenDAOMockup).verifyClientToken(TOKEN);
     }
 
     @Test
-    void checkIfResponse403IsGivenWhenTokenNotExists() {
+    void checkIfResponseNullIsGivenWhenTokenNotExists() {
         // Setup
-        when(playlistServiceMock.loadPlaylists(TOKEN)).thenReturn(null);
+        when(tokenDAOMockup.verifyClientToken(anyString())).thenReturn(false);
 
         // Test
-        Response result = sut.loadPlaylists(TOKEN);
+        PlaylistResponseDto result = sut.loadPlaylists(TOKEN);
 
         // Verify
-        assertEquals(403, result.getStatus());
+        assertNull(result);
     }
 
     @Test
     void checkIfMethodCanAddPlaylist() {
         // Setup
-        doNothing().when(playlistServiceMock).addPlaylist(TOKEN, request);
+        doNothing().when(playlistDAOMockup).addPlaylist(TOKEN, TITEL);
 
         // Test
         sut.addPlaylist(TOKEN, request);
 
         // Verify
-        verify(playlistServiceMock).addPlaylist(TOKEN, request);
+        verify(playlistDAOMockup).addPlaylist(TOKEN, TITEL);
     }
 
     @Test
     void checkIfMethodCanDeletePlaylist() {
         // Setup
-        doNothing().when(playlistServiceMock).deletePlaylist(TOKEN, ID);
+        doNothing().when(playlistDAOMockup).deletePlaylist(TOKEN, ID);
 
         // Test
         sut.deletePlaylist(TOKEN, ID);
 
         // Verify
-        verify(playlistServiceMock).deletePlaylist(TOKEN, ID);
+        verify(playlistDAOMockup).deletePlaylist(TOKEN, ID);
     }
 
     @Test
     void checkIfMethodCanEditPlaylist() {
         // Setup
-        doNothing().when(playlistServiceMock).editPlaylist(TOKEN, ID, request);
+        doNothing().when(playlistDAOMockup).editPlaylist(TOKEN, ID, TITEL);
 
         // Test
         sut.editPlaylist(TOKEN, ID, request);
 
         // Verify
-        verify(playlistServiceMock).editPlaylist(TOKEN, ID, request);
+        verify(playlistDAOMockup).editPlaylist(TOKEN, ID, TITEL);
     }
 
     @Test
     void checkIfMethodReturnsCorrectLoadedPlaylist() {
         // Setup
-        when(playlistServiceMock.loadPlaylists(TOKEN)).thenReturn(response);
+        when(tokenDAOMockup.verifyClientToken(TOKEN)).thenReturn(true);
 
         // Test
-        Response r = sut.loadPlaylists(TOKEN);
+        PlaylistResponseDto r = sut.loadPlaylists(TOKEN);
 
         // Verify
-        assertEquals(expectedResponse.toString(), r.toString());
+        assertEquals(response.getLength(), r.getLength());
+    }
+
+    @Test
+    void checkIfMethodReturnsCorrectLoadedPlaylistAfterAdd() {
+        // Setup
+        when(tokenDAOMockup.verifyClientToken(TOKEN)).thenReturn(true);
+
+        // Test
+        sut.addPlaylist(TITEL, request);
+
+        // Verify
+        //assertEquals(expectedResponse.toString(), r.toString());
     }
 }

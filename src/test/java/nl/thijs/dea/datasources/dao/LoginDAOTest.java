@@ -1,11 +1,12 @@
 package nl.thijs.dea.datasources.dao;
 
 import nl.thijs.dea.datasources.DatabaseConnection;
-import nl.thijs.dea.models.UserModel;
+import nl.thijs.dea.services.models.UserModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import javax.ws.rs.PATCH;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -28,13 +29,14 @@ class LoginDAOTest {
     private ResultSet result;
 
     private UserModel user;
+    private SQLException sqlException;
 
     @BeforeEach
     void setup() throws SQLException {
-        sut = new LoginDAO();
         user = new UserModel(USERNAME, WACHTWOORD);
 
         dbConnection = mock(DatabaseConnection.class);
+        sqlException = mock(SQLException.class);
 
         connection = Mockito.mock(Connection.class);
         statement = mock(PreparedStatement.class);
@@ -44,7 +46,7 @@ class LoginDAOTest {
         when(connection.prepareStatement(anyString())).thenReturn(statement);
         when(dbConnection.getConnection()).thenReturn(connection);
 
-        sut.setConnection(dbConnection);
+        sut = new LoginDAO(dbConnection);
     }
 
     @Test
@@ -106,9 +108,14 @@ class LoginDAOTest {
     }
 
     @Test
-    void doSQLExceptionGetsCorrectHandling(){
-        // MOET NOG GEMAAKT WORDEN!!!
+    void doSQLExceptionGetsCorrectHandling() throws SQLException {
+        //Setup
+        when(connection.prepareStatement(anyString())).thenThrow(sqlException);
 
-        fail();
+        //Test
+        sut.login(USERNAME, WACHTWOORD);
+
+        //Verify
+        verify(sqlException).printStackTrace();
     }
 }
