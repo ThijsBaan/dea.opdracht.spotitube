@@ -29,7 +29,9 @@ CREATE TABLE [Token] (
 Username			dt_username		NOT NULL,
 Token				VARCHAR(15)		NOT NULL,
 CONSTRAINT pk_token PRIMARY KEY (Username, Token),
-CONSTRAINT fk_token FOREIGN KEY (Username) REFERENCES [Login] (Username),
+CONSTRAINT fk_token FOREIGN KEY (Username) REFERENCES [Login] (Username)
+ON DELETE CASCADE
+ON UPDATE CASCADE,
 CONSTRAINT ak_token_us UNIQUE(Username),
 CONSTRAINT ak_token_tk UNIQUE(Token)
 )
@@ -60,8 +62,12 @@ CREATE TABLE [followingPlaylist](
 Playlist		dt_playlistid	NOT NULL,
 Follower		dt_username		NOT NULL
 CONSTRAINT pk_followingplaylist PRIMARY KEY (Playlist, Follower),
-CONSTRAINT fk_fp_p FOREIGN KEY (Playlist) REFERENCES [Playlist] (ID),
+CONSTRAINT fk_fp_p FOREIGN KEY (Playlist) REFERENCES [Playlist] (ID)
+ON DELETE CASCADE
+ON UPDATE CASCADE,
 CONSTRAINT fk_fp_f FOREIGN KEY (Follower) REFERENCES [Login] (Username)
+ON DELETE CASCADE
+ON UPDATE CASCADE
 )
 GO
 
@@ -70,8 +76,12 @@ Playlist		dt_playlistid	NOT NULL,
 Track			dt_trackid		NOT NULL,
 OfflineAvailable	BIT			NOT NULL
 CONSTRAINT pk_tip PRIMARY KEY (Playlist, Track),
-CONSTRAINT fk_tip_p FOREIGN KEY (Playlist) REFERENCES [Playlist] (ID),
+CONSTRAINT fk_tip_p FOREIGN KEY (Playlist) REFERENCES [Playlist] (ID)
+ON DELETE CASCADE
+ON UPDATE CASCADE,
 CONSTRAINT fk_tip_t FOREIGN KEY (Track) REFERENCES [Tracks] (ID)
+ON DELETE CASCADE
+ON UPDATE CASCADE
 )
 GO
 
