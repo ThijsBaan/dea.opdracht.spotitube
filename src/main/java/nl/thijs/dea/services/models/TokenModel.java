@@ -1,4 +1,4 @@
-package nl.thijs.dea.models;
+package nl.thijs.dea.services.models;
 
 import java.util.Random;
 

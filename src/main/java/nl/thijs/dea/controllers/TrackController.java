@@ -1,8 +1,7 @@
 package nl.thijs.dea.controllers;
 
-import nl.thijs.dea.controllers.dto.TrackResponseDto;
-import nl.thijs.dea.datasources.dao.TrackDAO;
-import nl.thijs.dea.models.TrackModel;
+import nl.thijs.dea.services.TrackService;
+import nl.thijs.dea.services.models.TrackModel;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -10,19 +9,17 @@ import javax.ws.rs.core.Response;
 
 @Path("/")
 public class TrackController {
-    private TrackDAO trackDAO;
+    private TrackService trackService;
 
     @Inject
-    public void setDAO(TrackDAO trackDAO) {
-        this.trackDAO = trackDAO;
+    public void setService(TrackService trackService) {
+        this.trackService = trackService;
     }
 
     @GET
     @Path("/playlists/{forplaylist}/tracks")
     public Response loadTracksPerPlaylist(@PathParam("forplaylist") int forPlayList) {
-        var response = new TrackResponseDto();
-
-        response.setTracks(trackDAO.getAllTracksWhoAreInPlaylist(forPlayList));
+        var response = trackService.loadTracksPerPlaylist(forPlayList);
         return Response.ok().entity(response).build();
     }
 
@@ -32,7 +29,7 @@ public class TrackController {
     public Response deleteTrackFromPlaylist(@QueryParam("token") String token,
                                             @PathParam("forplaylist") int forPlayList,
                                           @PathParam("id") int trackID) {
-        trackDAO.deleteTrackFromPlaylist(token, forPlayList, trackID);
+        trackService.deleteTrackFromPlaylist(token, forPlayList,trackID);
         return loadTracksPerPlaylist(forPlayList);
     }
 
@@ -42,7 +39,7 @@ public class TrackController {
     @Produces("application/json")
     public Response addTrackToPlaylist(@PathParam("forplaylist") int forPlayList,
                                         TrackModel request){
-        trackDAO.addTrackToPlaylist(forPlayList, request.getId(), request.getOfflineAvailable());
+        trackService.addTrackToPlaylist(forPlayList, request);
         return loadTracksPerPlaylist(forPlayList);
     }
 
@@ -50,10 +47,7 @@ public class TrackController {
     @Path("/tracks")
     @Consumes("application/json")
     public Response loadTracksForAdd(@QueryParam("Token") String token, @QueryParam("forPlaylist") int forPlayList){
-        var response = new TrackResponseDto();
-
-        response.setTracks(trackDAO.getAllTracksWhoArentInPlaylist(forPlayList));
-
+        var response = trackService.loadTracksForAdd(token, forPlayList);
         return Response.ok().entity(response).build();
     }
 }

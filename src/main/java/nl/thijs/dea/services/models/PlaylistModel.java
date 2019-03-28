@@ -1,4 +1,4 @@
-package nl.thijs.dea.models;
+package nl.thijs.dea.services.models;
 
 public class PlaylistModel {
     private int id;

@@ -1,6 +1,6 @@
-package nl.thijs.dea.controllers.dto;
+package nl.thijs.dea.services.dto;
 
-import nl.thijs.dea.models.PlaylistModel;
+import nl.thijs.dea.services.models.PlaylistModel;
 
 import java.util.List;
 

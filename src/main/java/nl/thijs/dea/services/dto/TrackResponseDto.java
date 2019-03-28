@@ -1,6 +1,6 @@
-package nl.thijs.dea.controllers.dto;
+package nl.thijs.dea.services.dto;
 
-import nl.thijs.dea.models.TrackModel;
+import nl.thijs.dea.services.models.TrackModel;
 
 import java.util.List;
 

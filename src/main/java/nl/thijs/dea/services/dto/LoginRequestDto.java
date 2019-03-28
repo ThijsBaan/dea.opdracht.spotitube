@@ -1,4 +1,4 @@
-package nl.thijs.dea.controllers.dto;
+package nl.thijs.dea.services.dto;
 
 /**
  * LoginRequestDto --- class for making an request for LoginController
