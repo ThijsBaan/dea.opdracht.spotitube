@@ -11,6 +11,8 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.Provider;
 import java.io.IOException;
 
+//http://www.codingpedia.org/ama/how-to-add-cors-support-on-the-server-side-in-java-with-jersey/
+
 @Provider
 public class CorsFilter implements ContainerResponseFilter {
 
