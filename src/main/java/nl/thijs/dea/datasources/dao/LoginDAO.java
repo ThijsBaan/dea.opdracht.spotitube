@@ -1,7 +1,7 @@
 package nl.thijs.dea.datasources.dao;
 
 import nl.thijs.dea.datasources.DatabaseConnection;
-import nl.thijs.dea.models.UserModel;
+import nl.thijs.dea.services.models.UserModel;
 
 import javax.inject.Inject;
 import java.sql.Connection;
@@ -12,7 +12,7 @@ public class LoginDAO {
     private Connection connection;
 
     @Inject
-    public void setConnection(DatabaseConnection databaseConnection) {
+    public LoginDAO(DatabaseConnection databaseConnection) {
         this.connection = databaseConnection.getConnection();
     }
 
@@ -31,9 +31,9 @@ public class LoginDAO {
     private boolean verifyLogin(String user, String password) {
         try {
             PreparedStatement loginSt = connection.prepareStatement("SELECT Username, Password FROM Login " +
-                                                                        "WHERE Username " +
-                                                                        "= ? " +
-                                                                        "AND Password = ?");
+                    "WHERE Username " +
+                    "= ? " +
+                    "AND Password = ?");
             loginSt.setString(1, user);
             loginSt.setString(2, password);
 

@@ -1,7 +1,7 @@
 package nl.thijs.dea.datasources.dao;
 
 import nl.thijs.dea.datasources.DatabaseConnection;
-import nl.thijs.dea.models.PlaylistModel;
+import nl.thijs.dea.services.models.PlaylistModel;
 
 import javax.inject.Inject;
 import java.sql.Connection;
@@ -11,12 +11,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayListDAO {
+public class PlayListDAO{
     private Connection connection;
     private int totalPlaylistLength;
 
     @Inject
-    public void setConnection(DatabaseConnection databaseConnection) {
+    public PlayListDAO(DatabaseConnection databaseConnection) {
         this.connection = databaseConnection.getConnection();
     }
 

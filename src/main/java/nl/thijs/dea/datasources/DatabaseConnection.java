@@ -23,10 +23,8 @@ public class DatabaseConnection {
             Class.forName(properties.getProperty("driver"));
 
             connection = DriverManager.getConnection(properties.getProperty("conncectionString"));
-        } catch (SQLException | ClassNotFoundException e) {
+        } catch (SQLException | IOException | ClassNotFoundException e) {
             System.out.println("An error message has occurred: " + e);
-        } catch (IOException e1) {
-            e1.printStackTrace();
         }
     }
 }

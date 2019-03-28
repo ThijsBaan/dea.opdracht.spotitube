@@ -1,7 +1,7 @@
 package nl.thijs.dea.datasources.dao;
 
 import nl.thijs.dea.datasources.DatabaseConnection;
-import nl.thijs.dea.models.TrackModel;
+import nl.thijs.dea.services.models.TrackModel;
 
 import javax.inject.Inject;
 import java.sql.Connection;
@@ -16,7 +16,7 @@ public class TrackDAO {
     private List<TrackModel> trackList = new ArrayList<>();
 
     @Inject
-    public void setConnection(DatabaseConnection databaseConnection) {
+    public TrackDAO(DatabaseConnection databaseConnection) {
         this.connection = databaseConnection.getConnection();
     }
 

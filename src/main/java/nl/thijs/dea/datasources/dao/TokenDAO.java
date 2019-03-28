@@ -1,7 +1,7 @@
 package nl.thijs.dea.datasources.dao;
 
 import nl.thijs.dea.datasources.DatabaseConnection;
-import nl.thijs.dea.models.TokenModel;
+import nl.thijs.dea.services.models.TokenModel;
 
 import javax.inject.Inject;
 import java.sql.Connection;
@@ -14,7 +14,7 @@ public class TokenDAO {
     private String token;
 
     @Inject
-    public void setConnection(DatabaseConnection databaseConnection) {
+    public TokenDAO(DatabaseConnection databaseConnection) {
         this.connection = databaseConnection.getConnection();
     }
 
