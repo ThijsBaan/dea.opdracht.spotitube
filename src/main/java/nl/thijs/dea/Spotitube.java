@@ -11,6 +11,6 @@ public class Spotitube {
     @GET
     @Produces("application/json")
     public Response hello() {
-        return Response.ok().entity("Hello World").build();
+        return Response.ok().entity("").build();
     }
 }
