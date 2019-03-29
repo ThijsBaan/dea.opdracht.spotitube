@@ -1,7 +1,6 @@
 package nl.thijs.dea.datasources.dao;
 
 import nl.thijs.dea.datasources.DatabaseConnection;
-import nl.thijs.dea.services.models.TrackModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -10,45 +9,25 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
 class TrackDAOTest {
 
-    private static final String USERNAME = "thijs";
-    private static final String TOKEN = "123456789";
-
     private TrackDAO sut;
-    private DatabaseConnection dbConnection;
     private Connection connection;
     private PreparedStatement statement;
     private ResultSet result;
-
-    private static final int PLAYLISTID = 1;
-
-
-    private static final int ID = 1;
-    private static final String TITEL = "disney";
-    private static final String PERFORMER = "Ties";
-    private static final int DURATION = 50;
-    private static final String ALBUM = "DISNEEYYYY";
-    private static final int PLAYCOUNT = 0;
-    private static final String PUBLICATIONDATE = "26-03-2019" ;
-    private static final String DESCRIPTION = "best album ever!";
-    private static final boolean OFFLINEAVAILABLE = false;
-    private TrackModel trackObj;
     private SQLException sqlExcpetion;
+
+    private static final String TOKEN = "123456789";
+    private static final int PLAYLISTID = 1;
+    private static final int ID = 1;
+    private static final boolean OFFLINEAVAILABLE = false;
 
     @BeforeEach
     void setup() throws SQLException {
-        trackObj = new TrackModel(ID, TITEL, PERFORMER, DURATION, ALBUM, PLAYCOUNT, PUBLICATIONDATE,DESCRIPTION, OFFLINEAVAILABLE);
-
-        dbConnection = mock(DatabaseConnection.class);
+        DatabaseConnection dbConnection = mock(DatabaseConnection.class);
         sqlExcpetion = mock(SQLException.class);
 
         connection = Mockito.mock(Connection.class);
@@ -139,40 +118,6 @@ class TrackDAOTest {
     }
 
     @Test
-    void doesGetAllTracksWhoArentInPlaylistReturnTrackModelList() throws SQLException {
-        //Setup
-//        List<TrackModel> realList = new ArrayList<>();
-//        realList.add(trackObj);
-
-        when(result.next()).thenReturn(true).thenReturn(false);
-        //when(sut.getAllTracksWhoArentInPlaylist(PLAYLISTID)).thenReturn(realList);
-        //Test
-        List<TrackModel> tempList = new ArrayList<>();
-        tempList = sut.getAllTracksWhoArentInPlaylist(PLAYLISTID);
-
-        //Verify
-        //assertEquals(realList, tempList);
-        fail();
-    }
-
-    @Test
-    void doesGetAllTracksWhoAreInPlaylistReturnTrackModelList() throws SQLException {
-        //Setup
-        List<TrackModel> realList = new ArrayList<>();
-        realList.add(trackObj);
-
-        when(result.next()).thenReturn(true).thenReturn(false);
-        when(sut.getAllTracksWhoArentInPlaylist(PLAYLISTID)).thenReturn(realList);
-        //Test
-        List<TrackModel> tempList = new ArrayList<>();
-        tempList = sut.getAllTracksWhoAreInPlaylist(PLAYLISTID);
-
-        //Verify
-        //assertEquals(realList, tempList);
-        fail();
-    }
-
-    @Test
     void doesGetAllTracksWhoArentInPlaylistHandleSQLException() throws SQLException {
         //Setup
         when(connection.prepareStatement(anyString())).thenThrow(sqlExcpetion);
@@ -194,6 +139,18 @@ class TrackDAOTest {
 
         //Verify
         verify(sqlExcpetion, times(2)).printStackTrace();
+    }
+
+    @Test
+    void doesGetAllTracksWhoAreInPlaylistHandleResultNext() throws SQLException {
+        //Setup
+        when(result.next()).thenReturn(true, true, false);
+
+        //Test
+        sut.getAllTracksWhoAreInPlaylist(ID);
+
+        //Verify
+        verify(result, times(4)).next();
     }
 
     @Test

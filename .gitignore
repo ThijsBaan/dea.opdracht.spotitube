@@ -128,7 +128,7 @@ local.properties
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
 
-### Word file ###
-*.docx
+### Documentatie folder ###
+documentatie/
 
 # End of https://www.gitignore.io/api/eclipse

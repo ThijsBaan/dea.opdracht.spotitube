@@ -32,13 +32,8 @@ public class PlayListDAO{
                     "                    CASE WHEN (SELECT [Username] FROM Token WHERE Token = ?) = [Owner]  " +
                     "                    THEN 1 ELSE 0 END AS [Owner], " +
                     "                    (SELECT SUM(Duration) FROM Tracks t where t.ID in (SELECT Track FROM tracksInPlaylist WHERE Playlist = p.ID)) as [Duration]  " +
-                    "                    FROM Playlist p " +
-                    "                    WHERE [Owner] IN (SELECT [Username] FROM Token WHERE Token = ?)  " +
-                    "                    OR [ID] IN (SELECT Playlist FROM followingPlaylist WHERE Follower IN (SELECT [Username] FROM Token  " +
-                    "                    WHERE Token = ?))");
+                    "                    FROM Playlist p ");
             playlistSt.setString(1, token);
-            playlistSt.setString(2, token);
-            playlistSt.setString(3, token);
 
             ResultSet r = playlistSt.executeQuery();
 

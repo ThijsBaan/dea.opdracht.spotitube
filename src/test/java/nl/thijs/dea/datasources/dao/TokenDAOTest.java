@@ -111,8 +111,7 @@ class TokenDAOTest {
     @Test
     void doesMethodInsertTokenIfUsersFirstTimeHandleSQLExceptionCorrect() throws SQLException {
         //Setup
-        when(result.next()).thenReturn(true);
-        when(result.getString("Token")).thenReturn(TOKEN);
+        when(result.next()).thenReturn(false);
         when(statement.executeUpdate()).thenThrow(sqlException);
 
         sut.insertTokenIfUsersFirstTime(USERNAME);
