@@ -58,19 +58,6 @@ CONSTRAINT pk_playlist PRIMARY KEY (ID)
 )
 GO
 
-CREATE TABLE [followingPlaylist](
-Playlist		dt_playlistid	NOT NULL,
-Follower		dt_username		NOT NULL
-CONSTRAINT pk_followingplaylist PRIMARY KEY (Playlist, Follower),
-CONSTRAINT fk_fp_p FOREIGN KEY (Playlist) REFERENCES [Playlist] (ID)
-ON DELETE CASCADE
-ON UPDATE CASCADE,
-CONSTRAINT fk_fp_f FOREIGN KEY (Follower) REFERENCES [Login] (Username)
-ON DELETE CASCADE
-ON UPDATE CASCADE
-)
-GO
-
 CREATE TABLE [tracksInPlaylist](
 Playlist		dt_playlistid	NOT NULL,
 Track			dt_trackid		NOT NULL,
@@ -100,10 +87,6 @@ GO
 INSERT INTO [Playlist] ([Name], [Owner])
 VALUES	('Heavy Metal', 'thijs'),
 		('Pop', 'zwartepiet')
-GO
-
-INSERT INTO [followingPlaylist] ([Playlist], [Follower])
-VALUES  (2, 'thijs')
 GO
 
 INSERT INTO [tracksInPlaylist] ([Playlist], [Track], [OfflineAvailable])
