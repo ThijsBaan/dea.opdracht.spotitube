@@ -86,7 +86,7 @@ class TrackServiceTest {
         when(trackDAOMock.getAllTracksWhoArentInPlaylist(PLAYLIST)).thenReturn(trackList);
 
         // Test
-        TrackResponseDto result = sut.loadTracksForAdd(TOKEN, PLAYLIST);
+        TrackResponseDto result = sut.loadTracksForAdd(PLAYLIST);
 
         // Verify
         verify(trackDAOMock).getAllTracksWhoArentInPlaylist(PLAYLIST);

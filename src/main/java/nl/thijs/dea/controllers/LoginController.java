@@ -2,6 +2,7 @@ package nl.thijs.dea.controllers;
 
 import nl.thijs.dea.services.LoginService;
 import nl.thijs.dea.services.dto.LoginRequestDto;
+import nl.thijs.dea.services.dto.LoginResponseDto;
 
 import javax.inject.Inject;
 import javax.ws.rs.POST;
@@ -34,7 +35,7 @@ public class LoginController {
     @POST
     @Path("login")
     public Response login(LoginRequestDto request) {
-        var response = loginService.login(request);
+        LoginResponseDto response = loginService.login(request);
 
         if (response == null) {
             return Response.status(401).build();

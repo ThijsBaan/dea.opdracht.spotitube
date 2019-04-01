@@ -1,6 +1,5 @@
 package nl.thijs.dea.controllers;
 
-import nl.thijs.dea.datasources.dao.TrackDAO;
 import nl.thijs.dea.services.TrackService;
 import nl.thijs.dea.services.dto.TrackResponseDto;
 import nl.thijs.dea.services.models.TrackModel;
@@ -91,13 +90,13 @@ class TrackControllerTest {
     @Test
     void checkIfMethodCanloadTracksForAdd() {
         // Setup
-        when(trackServiceMock.loadTracksForAdd(TOKEN, PLAYLIST)).thenReturn(response);
+        when(trackServiceMock.loadTracksForAdd(PLAYLIST)).thenReturn(response);
 
         // Test
-        Response result = sut.loadTracksForAdd(TOKEN, PLAYLIST);
+        Response result = sut.loadTracksForAdd(PLAYLIST);
 
         // Verify
-        verify(trackServiceMock).loadTracksForAdd(TOKEN, PLAYLIST);
+        verify(trackServiceMock).loadTracksForAdd(PLAYLIST);
     }
 
 

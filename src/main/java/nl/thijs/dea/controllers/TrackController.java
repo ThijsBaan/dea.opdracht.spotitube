@@ -38,7 +38,7 @@ public class TrackController {
     @Consumes("application/json")
     @Produces("application/json")
     public Response addTrackToPlaylist(@PathParam("forplaylist") int forPlayList,
-                                        TrackModel request){
+                                       TrackModel request){
         trackService.addTrackToPlaylist(forPlayList, request);
         return loadTracksPerPlaylist(forPlayList);
     }
@@ -46,8 +46,8 @@ public class TrackController {
     @GET
     @Path("/tracks")
     @Consumes("application/json")
-    public Response loadTracksForAdd(@QueryParam("Token") String token, @QueryParam("forPlaylist") int forPlayList){
-        var response = trackService.loadTracksForAdd(token, forPlayList);
+    public Response loadTracksForAdd(@QueryParam("forPlaylist") int forPlayList){
+        var response = trackService.loadTracksForAdd(forPlayList);
         return Response.ok().entity(response).build();
     }
 }

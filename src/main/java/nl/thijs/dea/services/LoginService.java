@@ -7,8 +7,6 @@ import nl.thijs.dea.services.dto.LoginResponseDto;
 import nl.thijs.dea.services.models.UserModel;
 
 import javax.inject.Inject;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
 
 public class LoginService {
     private LoginDAO loginDAO;

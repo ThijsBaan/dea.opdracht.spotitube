@@ -37,7 +37,6 @@ public class LoginDAO {
             loginSt.setString(1, user);
             loginSt.setString(2, password);
 
-
             return loginSt.executeQuery().next();
         } catch (SQLException e) {
             e.printStackTrace();

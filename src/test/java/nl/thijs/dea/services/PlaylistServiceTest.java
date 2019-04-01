@@ -8,8 +8,6 @@ import nl.thijs.dea.services.models.PlaylistModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.ws.rs.core.Response;
-
 import java.util.ArrayList;
 import java.util.List;
 

@@ -58,7 +58,7 @@ CONSTRAINT pk_playlist PRIMARY KEY (ID)
 )
 GO
 
-CREATE TABLE [tracksInPlaylist](
+CREATE TABLE [TracksInPlaylist](
 Playlist		dt_playlistid	NOT NULL,
 Track			dt_trackid		NOT NULL,
 OfflineAvailable	BIT			NOT NULL

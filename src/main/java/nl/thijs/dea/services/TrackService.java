@@ -27,10 +27,10 @@ public class TrackService {
 
     public void addTrackToPlaylist(int forPlayList,
                                        TrackModel request){
-        trackDAO.addTrackToPlaylist(forPlayList, request.getId(), request.getOfflineAvailable());
+        trackDAO.addTrackToPlaylist(forPlayList, request.getId(), request.isOfflineAvailable());
     }
 
-    public TrackResponseDto loadTracksForAdd(String token, int forPlayList){
+    public TrackResponseDto loadTracksForAdd(int forPlayList){
         var response = new TrackResponseDto();
         response.setTracks(trackDAO.getAllTracksWhoArentInPlaylist(forPlayList));
         return response;
